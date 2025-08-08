@@ -15,8 +15,11 @@ async def fetch_weather(latitude: float, longitude: float):
 
 async def geocode_location(location_name: str):
     url = f"https://nominatim.openstreetmap.org/search?format=json&q={location_name}"
+    headers = {
+        "User-Agent": "WeatherMCPDemo/1.0 (ukvhkkl@gmail.com)"  # replace with your email or website
+    }
     async with httpx.AsyncClient() as client:
-        response = await client.get(url)
+        response = await client.get(url, headers=headers)
         response.raise_for_status()
         results = response.json()
         if not results:
@@ -24,6 +27,7 @@ async def geocode_location(location_name: str):
         lat = float(results[0]["lat"])
         lon = float(results[0]["lon"])
         return lat, lon
+
 
 @app.post("/listTools")
 async def list_tools():
